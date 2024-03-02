@@ -1,8 +1,9 @@
-from autocorrect import Speller
+from language_tool_python import LanguageTool
 
 def spell_check(text):
-    spell = Speller(lang='en')
-    return spell(text)
+    tool = LanguageTool('en-US')  # Specify the language (English in this case)
+    matches = tool.check(text)
+    return tool.correct(text)
 
 def main():
     input_text = input("Enter text to spell-check: ")
