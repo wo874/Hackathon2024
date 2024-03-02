@@ -1,21 +1,20 @@
+from transformers import pipeline
 from spellchecker import SpellChecker
-import spacy
 
 def context_aware_spell_check(text):
-    nlp = spacy.load('en_core_web_sm')
+    # Use pyspellchecker for basic spell checking
     spell = SpellChecker()
+    words = text.split()
+    corrected_text = ' '.join(spell.correction(word) for word in words)
 
-    doc = nlp(text)
+    # Use BERT for contextual corrections
+    nlp = pipeline('fill-mask', model='bert-base-uncased', tokenizer='bert-base-uncased')
+    results = nlp(corrected_text)
 
-    corrected_text = ""
-    for token in doc:
-        if token.is_alpha and not token.is_stop:
-            corrected_token = spell.correction(token.text)
-            corrected_text += corrected_token + " "
-        else:
-            corrected_text += token.text + " "
+    # Replace masked tokens with BERT predictions
+    corrected_text = corrected_text.replace('[MASK]', results[0]['token_str'])
 
-    return corrected_text.strip()
+    return corrected_text
 
 def main():
     input_text = input("Enter text to spell-check: ")
@@ -26,4 +25,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
