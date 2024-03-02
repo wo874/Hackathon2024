@@ -1,4 +1,7 @@
+from flask import Flask, render_template, request
 from spellchecker import SpellChecker
+
+app = Flask(__name__)
 
 def spell_check(text):
     spell = SpellChecker()
@@ -15,12 +18,14 @@ def spell_check(text):
 
     return corrected_text.strip()
 
-def main():
-    input_text = input("Enter text to spell-check: ")
-    corrected_text = spell_check(input_text)
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        input_text = request.form['input_text']
+        corrected_text = spell_check(input_text)
+        return render_template('index.html', input_text=input_text, corrected_text=corrected_text)
 
-    print("\nOriginal Text:   ", input_text)
-    print("Corrected Text:  ", corrected_text)
+    return render_template('index.html', input_text='', corrected_text='')
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    app.run(debug=True)
