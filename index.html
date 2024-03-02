@@ -5,17 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spell Checker</title>
 </head>
-<body>
-    <h1>Spell Checker</h1>
+<style>
+    h1 {text-align: center;}
+    h2 {text-align: center;}
+    h3 {text-align: center;}
+    ul {text-align: center;}
+    form {text-align: center;}
+    li {text-align: center;}
+    p {text-align: center;}
+</style>
+<body style="background-color:lavenderblush;">
+    <h1 style="background-color: goldenrod;">Spell Checker</h1>
     <form method="POST" action="/">
-        <label for="input_text">Enter text to spell-check:</label>
+        <label for="input_text">Enter text to spell-check:</label><br>
         <textarea name="input_text" id="input_text" rows="4" cols="50">{{ input_text }}</textarea><br>
-        <button type="submit">Check Spelling</button>
+        <button style="background-color:rgb(117, 153, 222) ;"  ="submit">Check Now!</button>
     </form>
     {% if corrected_text %}
-        <h2>Results:</h2>
-        <p><strong>Original Text:</strong><br>{{ input_text }}</p>
-        <p><strong>Corrected Text:</strong><br>{{ corrected_text }}</p>
+        <h2>Corrected Text:</h2>
+        <p>{{ corrected_text }}</p>
+        <p>Number of words changed: {{ num_changed }}</p>
+        {% if changed_words %}
+            <h3>List of Changed Words:</h3>
+            <ul>
+                {% for word_tuple in changed_words %}
+                    <li>{{ word_tuple[0] }} -> {{ word_tuple[1] }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     {% endif %}
 </body>
 </html>
